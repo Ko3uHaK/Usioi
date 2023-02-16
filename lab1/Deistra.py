@@ -1,3 +1,4 @@
+import sys
 class Graph(object):
     def __init__(self, nodes, our_graph):
         self.nodes = nodes
@@ -45,6 +46,15 @@ def d(graph, start_node):
                 previous_nodes[neighbor] = current_min_node
         unvisited_nodes.remove(current_min_node)
     return previous_nodes, shortest_path
+def print_result(previous_nodes, shortest_path, start_node, target_node):
+    path = []
+    node = target_node
+    while node != start_node:
+        path.append(node)
+        node = previous_nodes[node]
+    path.append(start_node)
+    print("{}".format(shortest_path[target_node]))
+    print(" -> ".join(reversed(path)))
 nodes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 our_graph = {}
 for node in nodes:
@@ -64,3 +74,6 @@ our_graph["7"]["9"] = 2
 our_graph["7"]["10"] = 5
 our_graph["8"]["9"] = 7
 our_graph["9"]["10"] = 2
+graph = Graph(nodes, our_graph)
+previous_nodes, shortest_path = d(graph=graph, start_node="1")
+print_result(previous_nodes, shortest_path, start_node="1", target_node="10")
