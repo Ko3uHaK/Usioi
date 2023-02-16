@@ -1,0 +1,19 @@
+nodes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+our_graph = {}
+for node in nodes:
+    our_graph[node] = {}   
+our_graph["1"]["2"] = 3
+our_graph["1"]["4"] = 4
+our_graph["2"]["3"] = 3
+our_graph["3"]["4"] = 4
+our_graph["3"]["5"] = 7
+our_graph["3"]["8"] = 4
+our_graph["4"]["6"] = 1
+our_graph["4"]["8"] = 3
+our_graph["5"]["7"] = 3
+our_graph["6"]["8"] = 9
+our_graph["7"]["8"] = 5
+our_graph["7"]["9"] = 2
+our_graph["7"]["10"] = 5
+our_graph["8"]["9"] = 7
+our_graph["9"]["10"] = 2
