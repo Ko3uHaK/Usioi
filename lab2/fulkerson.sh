@@ -11,7 +11,7 @@ function find_augmenting_path {
   queue+=(s)
   visited+=(s)
   parent[s]=-1
-  
+
     while [[ ${#queue[@]} -ne 0 ]]; do
     local u=${queue[0]}
     unset queue[0]
@@ -24,3 +24,15 @@ function find_augmenting_path {
       fi
     done
   done
+
+    if [[ ${visited[*]} =~ t ]]; then
+    echo ${parent[*]}
+  else
+    echo ""
+  fi
+}
+
+function augment_flow {
+  local path=("$@")
+  local bottleneck=1000000
+  local u t
