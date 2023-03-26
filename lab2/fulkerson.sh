@@ -11,3 +11,16 @@ function find_augmenting_path {
   queue+=(s)
   visited+=(s)
   parent[s]=-1
+  
+    while [[ ${#queue[@]} -ne 0 ]]; do
+    local u=${queue[0]}
+    unset queue[0]
+    for v in "${!network[@]}"; do
+      local capacity=${network[$v]}
+      if [[ $capacity -gt 0 && ! ${visited[*]} =~ $v ]]; then
+        queue+=("$v")
+        parent[$v]=$u
+        visited+=("$v")
+      fi
+    done
+  done
