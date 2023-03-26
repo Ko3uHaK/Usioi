@@ -1,55 +1,50 @@
+#!/bin/bash
 
-declare -A network=(
-# Тут я вношу свои вершины, к примеру [s,1]=0 [s,2]=6
-)
+readonly INF=999999999 
+readonly V=10           
 
-function find_augmenting_path {
+ford_fulkerson() {
+
+  local matrix=("$@")
+
   local parent=()
-  local queue=()
-  local visited=()
 
-  queue+=(s)
-  visited+=(s)
-  parent[s]=-1
+  for (( i=0; i<$V; i++ ))
+  do
+    parent[$i]=-1
+  done
 
-    while [[ ${#queue[@]} -ne 0 ]]; do
-    local u=${queue[0]}
-    unset queue[0]
-    for v in "${!network[@]}"; do
-      local capacity=${network[$v]}
-      if [[ $capacity -gt 0 && ! ${visited[*]} =~ $v ]]; then
-        queue+=("$v")
-        parent[$v]=$u
-        visited+=("$v")
+  local max_flow=0     
+
+
+  while bfs "${matrix[@]}" "$2" "$3" "${parent[@]}"
+  do
+    local path_flow=$INF 
+
+
+    for (( v=$3; v!=$2; v=${parent[$v]} ))
+    do
+      local u=${parent[$v]}
+      if (( matrix[u*V+v] < path_flow ))
+      then
+        path_flow=${matrix[u*V+v]}
       fi
     done
+
+
+    for (( v=$3; v!=$2; v=${parent[$v]} ))
+    do
+      local u=${parent[$v]}
+      matrix[u*V+v]=$(( matrix[u*V+v] - path_flow ))
+      matrix[v*V+u]=$(( matrix[v*V+u] + path_flow ))
+    done
+
+
+    max_flow=$(( max_flow + path_flow ))
   done
 
-    if [[ ${visited[*]} =~ t ]]; then
-    echo ${parent[*]}
-  else
-    echo ""
-  fi
+  echo "$max_flow"
 }
+bfs() {
+  local visited=()
 
-function augment_flow {
-  local path=("$@")
-  local bottleneck=1000000
-  local u t
-
-  t=${path[t]}
-  u=${path[$t]}
-  while [[ $u -ne -1 ]]; do
-    local capacity=${network["$u,$t"]}
-    bottleneck=$(( capacity < bottleneck ? capacity : bottleneck ))
-    t=$u
-    u=${path[$t]}
-  done
-
-  t=${path[t]}
-  u=${path[$t]}
-  while [[ $u -ne -1 ]]; do
-    local capacity=${network["$u,$t"]}
-    network["$u,$t"]=$(( capacity - bottleneck ))
-    network["$t,$u"]=$(( ${network["$t,$u"]} + bottleneck
-    
