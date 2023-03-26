@@ -36,3 +36,13 @@ function augment_flow {
   local path=("$@")
   local bottleneck=1000000
   local u t
+
+  t=${path[t]}
+  u=${path[$t]}
+  while [[ $u -ne -1 ]]; do
+    local capacity=${network["$u,$t"]}
+    bottleneck=$(( capacity < bottleneck ? capacity : bottleneck ))
+    t=$u
+    u=${path[$t]}
+  done
+  
